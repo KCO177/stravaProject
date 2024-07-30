@@ -2,7 +2,8 @@ import json
 import requests
 import pandas as pd
 
-class DataFetcher:
+
+class DataFetcher():
     def getAllActivities(access_token):
         # Step 2: Use access token to get athlete activities
         activities_url = 'https://www.strava.com/api/v3/athlete/activities'
@@ -17,21 +18,25 @@ class DataFetcher:
         else:
             print(f"Error: {activities_response.json()}")
 
-    def filterRideData(activities):
-        rides = [activity for activity in activities if activity['type'] == 'Ride']
+    def filterRides(activities):
+        filteredRides = [activity for activity in activities if activity['type'] == 'Ride']
+        return filteredRides
+
+
+    def filterRideData(rides):
         filtered_ride = pd.DataFrame(rides)
         filtered_ride['Activity Date'] = pd.to_datetime(filtered_ride['start_date_local'])
         filtered_ride['Activity Type'] = filtered_ride['type']
-        filtered_ride['Elapsed Time'] = filtered_ride['elapsed_time']
-        filtered_ride['Distance'] = filtered_ride['distance'] / 1000  # Convert from meters to kilometers
+        filtered_ride['Ride Type'] = filtered_ride['sport_type']
+        filtered_ride['Moving Time'] = filtered_ride['moving_time']
+        filtered_ride['Distance'] = filtered_ride['distance']
+        filtered_ride['Elevation Gain'] = filtered_ride['total_elevation_gain']
 
         #TODO this block only for dev check remove this
-        strava_df_filtered = filtered_ride[['Activity Date', 'Activity Type', 'Elapsed Time', 'Distance']]
+        strava_df_filtered = filtered_ride[['Activity Date', 'Activity Type','Ride Type', 'Moving Time', 'Distance', 'Elevation Gain']]
         print(strava_df_filtered)
 
-        filtered_ride_to_job = filtered_ride[filtered_ride['Distance'] < 40] #TODO refactor this into input
-        total_distance = filtered_ride_to_job['Distance'].sum()
-        total_time = (filtered_ride_to_job['Elapsed Time'].sum()) / 3600
-        data = [total_distance, total_time]
-        return (data)
+        return strava_df_filtered
 
+    def filterRidesPerWeek(self):
+        pass
