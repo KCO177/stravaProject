@@ -18,5 +18,5 @@ class Authorization:
             print("Failed to retrieve access token.")
         else:
             print("Access token retrieved successfully")
-            return token_data
+            return access_token
 

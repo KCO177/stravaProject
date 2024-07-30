@@ -1,23 +1,3 @@
-import pandas as pd
-
-class data_strava:
-
-    def strava_csv():
-        strava_data = pd.read_csv('/export_109512466/activities.csv')
-        df = pd.DataFrame(strava_data)
-        strava_df_filtered = df[['Activity Date', 'Activity Type', 'Elapsed Time', 'Distance']]
-        #print(strava_df_filtered)
-        filtered_ride = strava_df_filtered[strava_df_filtered['Activity Type'].str.contains('Ride')]
-        filtered_ride_to_job = filtered_ride[filtered_ride['Distance'] < 20]
-        total_distance = filtered_ride_to_job['Distance'].sum()
-        total_time = (filtered_ride_to_job['Elapsed Time'].sum()) / 3600
-
-        #print(filtered_ride)
-        #print('total distance ', total_distance, 'time')
-        #print('total time elapsed ', total_time, 'hours')
-        data = [total_distance, total_time]
-        return (data)
-
 class CO2_calculator:
 
     def one_km_weigth(km):
@@ -44,29 +24,3 @@ class CO2_calculator:
         total_cal = round(duration*minute_cycling, 2)
         print('you burn total', total_cal,'cal')
         #print('you should burn additional', total_cal*5,'cal in one week' )
-
-#add your common car route distance
-
-
-km_into_the_job = 12.4*2#*4
-min_into_the_job = 120
-
-print('for job travels:')
-print('green km into the job',km_into_the_job, 'km')
-CO2_calculator.one_km_weigth(km_into_the_job)
-CO2_calculator.cal_hour(min_into_the_job*4)
-print('-----------------------')
-
-
-data = data_strava.strava_csv()
-tot_km = round(data[0])
-tot_dur = round(data[1])
-print('allover rides to job:')
-print('You ride total: ', tot_km , 'km')
-print('In duration: ', tot_dur, 'hours')
-CO2_calculator.one_km_weigth(tot_km)
-CO2_calculator.cal_hour(tot_dur*60)
-
-
-
-
