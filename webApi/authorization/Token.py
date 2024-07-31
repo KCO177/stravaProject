@@ -7,19 +7,20 @@ from webApi.authorization.Authorization import Authorization
 
 class Token:
     def fetch_access_token(self, clientId):
-        token = self.fetch_data(clientId, "short_lived_access_token", "access_token")
-        if None or self.is_expired(clientId):
-            print('authorization token invalid or missing, start authorization process')
+        token = self.fetch_data(clientId, "access_token", "access_token")
+        if token == None or self.is_expired(clientId):
+            print('authorization token invalid or missing, starting authorization process')
             newToken = self.set_access_token(clientId)
             return newToken
         else:
+            print('access token valid')
             return token
 
     def set_access_token(self, clientId):
         authorization_instance = Authorization()
         token, expiration_timestamp = authorization_instance.getAccessToken(clientId)
-        self.insert_data(clientId, "short_lived_access_token", "access_token", token)
-        self.insert_data(clientId, "short_lived_access_token", "expiration", expiration_timestamp)
+        self.insert_data(clientId, "access_token", "access_token", token)
+        self.insert_data(clientId, "access_token", "expiration", expiration_timestamp)
         return token
     def connect_db(self):
         try:
@@ -71,13 +72,29 @@ class Token:
             return
 
         try:
+            # Ensure the table name is safe
+            if not table.isidentifier():
+                raise ValueError("Invalid table name.")
+
+            # Check if the record exists
             cur.execute(f'''
-                INSERT INTO {table} (client_id, name, value)
-                VALUES (%s, %s, %s)
-                ON CONFLICT (client_id, name)
-                DO UPDATE SET value = EXCLUDED.value
-            ''', (client_id, name, value))
-            print(f"Upserted {name} in {table} for {client_id}")
+                SELECT 1 FROM {table} WHERE client_id = %s AND name = %s
+            ''', (client_id, name))
+            exists = cur.fetchone() is not None
+
+            if exists:
+                # Update the existing record
+                cur.execute(f'''
+                    UPDATE {table} SET value = %s WHERE client_id = %s AND name = %s
+                ''', (value, client_id, name))
+                print(f"Updated {name} in {table} for {client_id}")
+            else:
+                # Insert a new record
+                cur.execute(f'''
+                    INSERT INTO {table} (client_id, name, value)
+                    VALUES (%s, %s, %s)
+                ''', (client_id, name, value))
+                print(f"Inserted {name} in {table} for {client_id}")
 
             conn.commit()
         except Exception as e:
@@ -87,15 +104,24 @@ class Token:
             conn.close()
 
     def is_expired(self, clientId):
-        #True is it is expired
-        expiration_date_from_db = self.fetch_data(clientId, "short_lived_acces_token", "expire_at")
-        if expiration_date_from_db == None: pass #TODO call authorization
+        expiration_date_from_db = self.fetch_data(clientId, "access_token", "expiration")
+        if expiration_date_from_db == None:
+            return True
         else:
-            expiration_date = self.convert_unix_timestamp(expiration_date_from_db)
-            expiration_timestamp = self.convert_unix_timestamp(expiration_date)
-            current_timestamp = int(datetime.datetime.now().timestamp())
-            return current_timestamp > expiration_timestamp
+            expiration_date = self.convert_unix_timestamp(int(expiration_date_from_db))
+            current_timestamp = self.convert_unix_timestamp(int(datetime.datetime.now().timestamp()))
+            return current_timestamp > expiration_date
 
     def convert_unix_timestamp(self, timestamp):
         dt = datetime.datetime.fromtimestamp(timestamp)
         return dt.strftime('%Y-%m-%d %H:%M:%S')
+
+    def get_unix_timestamp(self, timestamp):
+        # Assuming timestamp is already a Unix timestamp (integer)
+        if isinstance(timestamp, str):
+            try:
+                timestamp = int(timestamp)
+            except ValueError:
+                print("Invalid timestamp format")
+                return None
+        return timestamp
