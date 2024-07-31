@@ -1,12 +1,12 @@
-from urllib.parse import urlparse, parse_qs
 import requests
 import webbrowser
-from webApi.domain.Token import Token
+
 
 
 class Authorization:
 
     def authorizeUser(self):
+        from webApi.authorization.Token import Token
         client_id = Token.client_id #get client Id
         redirect_uri = 'http://localhost/exchange_token'
         scope = 'activity:read_all'
@@ -15,6 +15,7 @@ class Authorization:
 
 
     def get_refresh_token(client_id, code):
+        from webApi.authorization.Token import Token
         token_response = requests.post(
         'https://www.strava.com/oauth/token',
         data = {
@@ -33,6 +34,7 @@ class Authorization:
             return refresh_token
 
     def getAccessToken(self,client_id):
+        from webApi.authorization.Token import Token
         token_instance = Token()
         token_response = requests.post(
             'https://www.strava.com/oauth/token',
@@ -51,12 +53,6 @@ class Authorization:
         else:
             print("Access token retrieved successfully")
             return access_token, expiration
-    '''
-    how to call
-    token, expiration_timestamp = get_access_token_info()
-    print(f"Access Token: {token}")
-    print(f"Expiration Timestamp: {expiration_timestamp}")
-    '''
 
 
 
