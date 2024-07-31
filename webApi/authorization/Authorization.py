@@ -1,7 +1,6 @@
-from urllib.parse import urlparse, parse_qs
 import requests
 import webbrowser
-from webApi.domain.Token import Token
+from webApi.authorization.Token import Token
 
 
 class Authorization:
