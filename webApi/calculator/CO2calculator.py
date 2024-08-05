@@ -1,15 +1,21 @@
+from webApi.dataFetcher.PriceHandler import PriceHandler
+
+
 class CO2_calculator:
 
 
     def one_km_weigth(filteredRides):
         km = int(filteredRides['Distance'].sum()) / 1000
-        print(km)
-        # weigth [g] CO2 for 1 litr
+
+        # weigth [g] CO2 per 1 litr:
         litr_nafta = 2640
         litr_benzin = 2390
         litr_fuel = 2500
-        cena_phm = 37.5 #TODO get from web
-        cena_ben = 36.7 #TODO get from web
+
+        price = PriceHandler()
+        cena_naf = float(price.getValidPrices()[3])
+        cena_ben = float(price.getValidPrices()[2])
+
         avg_l = 6.5 #AVG consumption of your car for 100 km TODO make input
 
         one_km = litr_fuel*avg_l/100

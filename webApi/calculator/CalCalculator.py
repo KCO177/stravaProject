@@ -37,4 +37,3 @@ class CaloryCalculator:
         if 40 >= difficultyCoef: difficulty = 'Intense'
 
         return Bike.get_bike_value(ride_type + difficulty)
-
