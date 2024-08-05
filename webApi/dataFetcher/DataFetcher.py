@@ -38,5 +38,4 @@ class DataFetcher():
 
         return strava_df_filtered
 
-    def filterRidesPerWeek(self):
-        pass
+
