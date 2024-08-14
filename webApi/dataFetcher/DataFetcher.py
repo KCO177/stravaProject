@@ -4,6 +4,19 @@ import pandas as pd
 
 
 class DataFetcher():
+    def getAthlete(access_token):
+        athlete_url = 'https://www.strava.com/api/v3/athlete'
+        headers = {'Authorization': f'Bearer {access_token}'}
+
+        athlete_response = requests.get(athlete_url, headers=headers)
+
+        # Ensure successful API request
+        if athlete_response.status_code == 200:
+            athlete = athlete_response.json()
+            return (athlete)
+        else:
+            print(f"Error: {athlete_response.json()}")
+
     def getAllActivities(access_token):
         # Step 2: Use access token to get athlete activities
         activities_url = 'https://www.strava.com/api/v3/athlete/activities'
@@ -22,6 +35,10 @@ class DataFetcher():
         filteredRides = [activity for activity in activities if activity['type'] == 'Ride']
         return filteredRides
 
+    def filterState(athlete):
+        country = athlete.get("country")
+        return country
+
 
     def filterRideData(rides):
         filtered_ride = pd.DataFrame(rides)
@@ -34,6 +51,7 @@ class DataFetcher():
 
         #TODO this block only for dev check remove this
         strava_df_filtered = filtered_ride[['Activity Date', 'Activity Type','Ride Type', 'Moving Time', 'Distance', 'Elevation Gain']]
+        print('strava_df_filtered')
         print(strava_df_filtered)
 
         return strava_df_filtered
