@@ -1,8 +1,6 @@
 import requests
 import webbrowser
 
-
-
 class Authorization:
 
     def authorizeUser(self):

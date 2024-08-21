@@ -1,6 +1,4 @@
 from datetime import datetime
-from typing import List, Any
-
 from webApi.authorization.Token import Token
 from webApi.dataFetcher.WebScraper import WebScraper
 
@@ -68,5 +66,3 @@ class PriceHandler:
                     return new_values
         else:
             print("No prices found.")
-
-
