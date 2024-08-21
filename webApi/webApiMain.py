@@ -4,6 +4,7 @@ from webApi.calculator.CO2calculator import CO2_calculator
 from webApi.calculator.CalCalculator import CaloryCalculator
 from webApi.dataFetcher.DataFetcher import DataFetcher
 from webApi.dataFetcher.DataFilter import DataFilter
+from webApi.domain.Currency import Currency
 
 auth_instance = Authorization()
 token_instance = Token()
@@ -14,7 +15,10 @@ activities = DataFetcher.getAllActivities(authorizationToken) #get all activitie
 rides = DataFilter.filterRides(activities)
 
 filteredRides = DataFetcher.filterRideData(rides) #get filtered sum data
-CO2_calculator.one_km_weigth(filteredRides) #calculate CO2 save
+athlete_currency = Currency.get_currency_for_athlete(106674)
+
+
+CO2_calculator.one_km_weigth(filteredRides, athlete_currency) #calculate CO2 save
 CaloryCalculator.cal_hour(filteredRides) #calculate cal
 
 

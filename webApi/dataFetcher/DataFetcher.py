@@ -31,14 +31,6 @@ class DataFetcher():
         else:
             print(f"Error: {activities_response.json()}")
 
-    def filterRides(activities):
-        filteredRides = [activity for activity in activities if activity['type'] == 'Ride']
-        return filteredRides
-
-    def filterState(athlete):
-        country = athlete.get("country")
-        return country
-
 
     def filterRideData(rides):
         filtered_ride = pd.DataFrame(rides)

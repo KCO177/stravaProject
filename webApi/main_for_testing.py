@@ -1,16 +1,14 @@
-from webApi.authorization.Authorization import Authorization
-from webApi.authorization.Token import Token
-from webApi.dataFetcher import DataFilter
-from webApi.dataFetcher.DataFetcher import DataFetcher
+from webApi.dataFetcher.PriceHandler import PriceHandler
+from webApi.domain.Country import Country
+from webApi.domain.Currency import Currency
+from webApi.domain.Athlete import Athlete
 
-
-auth_instance = Authorization()
-token_instance = Token()
-clientId = 106674
-
-authorizationToken = token_instance.fetch_access_token(clientId) #get acces token from refresh token
-athlete = DataFetcher.getAthlete(authorizationToken) #get all activities
-print(athlete)
-
-
-print(DataFilter.DataFilter.filterCountry(athlete))
+#getCountry
+'''
+country = (Athlete.getAthleteCountry(106674))
+country_code = Country(country)
+country_code = country_code.value
+currency_code = Currency.get_currency_by_country_code(country_code)
+print(f"The currency for {country} code: {country_code} is {currency_code}.")
+'''
+print(code)
