@@ -18,9 +18,9 @@ class WebScraper:
             if sublist and sublist[0][0] == 'Datum':  # Check if the first element of the sublist is 'Datum'
                 for entry in sublist[1:]:
                     date = entry[0]
-                    benzin_price = entry[1]
+                    benzine_price = entry[1]
                     nafta_price = entry[3]
-                    result_list.append([date, benzin_price, nafta_price])
+                    result_list.append([date, benzine_price, nafta_price])
 
         result = [sublist for sublist in result_list if sublist[0] == date_to_find]
         result = result[0] if result else None

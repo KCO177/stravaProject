@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO2 Save with Cycling</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        h1 {
+            text-align: center;
+            color: #0073e6;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .result-block {
+            background-color: #e6f7ff;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid #0073e6;
+            border-radius: 4px;
+        }
+        .result-block p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CO2 Save with Cycling</h1>
+
+    <label for="car-type">Select your car type:</label>
+    <select id="car-type">
+        <option value="small">Small Car</option>
+        <option value="medium">Medium Car</option>
+        <option value="large">Large Car</option>
+    </select>
+
+    <label for="km-cycled">Enter kilometers cycled this week:</label>
+    <input type="number" id="km-cycled" placeholder="e.g. 10" min="0">
+
+    <div class="result-block">
+        <p id="co2-saved">You save <strong>0.00 kg</strong> of CO2 this week</p>
+        <p id="fuel-saved">You save <strong>0.00 l</strong> of fuel, worth <strong>0.00 CZK</strong></p>
+        <p id="calories-burned">You burn <strong>0</strong> calories this week</p>
+    </div>
+
+    <script>
+        const CO2_PER_KM = 250.95 / 1000; // in kg
+        const FUEL_PER_KM = 16.44 / 39.28; // in liters per km
+        const FUEL_PRICE_PER_L = 617.82 / 16.44; // in CZK per liter
+        const CALORIES_BURNED_PER_KM = 1653.07 / 39.28;
+
+        document.getElementById('km-cycled').addEventListener('input', calculateSavings);
+
+        function calculateSavings() {
+            const kmCycled = parseFloat(document.getElementById('km-cycled').value) || 0;
+
+            const co2Saved = (kmCycled * CO2_PER_KM).toFixed(2);
+            const fuelSaved = (kmCycled * FUEL_PER_KM).toFixed(2);
+            const fuelCost = (fuelSaved * FUEL_PRICE_PER_L).toFixed(2);
+            const caloriesBurned = Math.round(kmCycled * CALORIES_BURNED_PER_KM);
+
+            document.getElementById('co2-saved').innerHTML = `You save <strong>${co2Saved} kg</strong> of CO2 this week`;
+            document.getElementById('fuel-saved').innerHTML = `You save <strong>${fuelSaved} l</strong> of fuel, worth <strong>${fuelCost} CZK</strong>`;
+            document.getElementById('calories-burned').innerHTML = `You burn <strong>${caloriesBurned}</strong> calories this week`;
+        }
+    </script>
+
+</body>
+</html>
